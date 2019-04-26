@@ -143,6 +143,13 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClInclude Include="EasyGraphics.h" />
+    <ClInclude Include="GraphicsTool.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="EasyGraphics.cpp" />
+    <ClCompile Include="GraphicsTool.cpp" />
+    <ClCompile Include="Main.cpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
