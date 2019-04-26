@@ -143,10 +143,12 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClInclude Include="Control.h" />
     <ClInclude Include="EasyGraphics.h" />
     <ClInclude Include="GraphicsTool.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="Control.cpp" />
     <ClCompile Include="EasyGraphics.cpp" />
     <ClCompile Include="GraphicsTool.cpp" />
     <ClCompile Include="Main.cpp" />
