@@ -35,9 +35,9 @@ void DrawingSingleton::addShape(const wchar_t* shapeName, int startX, int startY
 		shapes.push_back(new Quadrilateral(startX, startY, endX, endY, lineColour, fillColour));
 	}
 	else if (shapeName == L"Circle") {
-
+		shapes.push_back(new Circle(startX, startY, endX, endY, lineColour, fillColour));
 	}
 	else if (shapeName == L"Line") {
-
+		shapes.push_back(new Line(startX, startY, endX, endY, lineColour, fillColour));
 	}
 }

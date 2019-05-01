@@ -3,6 +3,8 @@
 #include <string>
 #include "Shape.h"
 #include "Quadrilateral.h"
+#include "Circle.h"
+#include "Line.h"
 
 class DrawingSingleton
 {

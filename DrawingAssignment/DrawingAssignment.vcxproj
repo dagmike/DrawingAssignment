@@ -143,18 +143,22 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClInclude Include="Circle.h" />
     <ClInclude Include="Control.h" />
     <ClInclude Include="DrawingSingleton.h" />
     <ClInclude Include="EasyGraphics.h" />
     <ClInclude Include="GraphicsTool.h" />
+    <ClInclude Include="Line.h" />
     <ClInclude Include="Quadrilateral.h" />
     <ClInclude Include="Shape.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="Circle.cpp" />
     <ClCompile Include="Control.cpp" />
     <ClCompile Include="DrawingSingleton.cpp" />
     <ClCompile Include="EasyGraphics.cpp" />
     <ClCompile Include="GraphicsTool.cpp" />
+    <ClCompile Include="Line.cpp" />
     <ClCompile Include="Main.cpp" />
     <ClCompile Include="Quadrilateral.cpp" />
     <ClCompile Include="Shape.cpp" />
