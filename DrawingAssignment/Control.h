@@ -4,11 +4,14 @@
 class Control
 {
 public:
-	Control(int x, int y, wchar_t* iconFilename = NULL);
+	Control(const wchar_t* name, int x, int y, const wchar_t* iconFilename = NULL, bool shapeControl = false);
 	~Control();
 
 	void draw(EasyGraphics* canvas) const;
 	inline bool isClicked(int clickX, int clickY) const;
+	void handleClick();
+	void deselect();
+	inline bool isShapeControl() const;
 
 private:
 	// Position
@@ -16,7 +19,13 @@ private:
 	// Size
 	static int width, height;
 	// Icon
-	wchar_t* iconFilename;
+	const wchar_t* iconFilename;
+	// Name
+	const wchar_t* name;
+	// Is the control selected
+	bool selected;
+	// Is it a shape control
+	bool shapeControl;
 };
 
 bool Control::isClicked(int clickX, int clickY) const
@@ -25,3 +34,7 @@ bool Control::isClicked(int clickX, int clickY) const
 		&& (clickY >= y && clickY <= y + height);
 }
 
+bool Control::isShapeControl() const
+{
+	return shapeControl;
+}

@@ -144,14 +144,20 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClInclude Include="Control.h" />
+    <ClInclude Include="DrawingSingleton.h" />
     <ClInclude Include="EasyGraphics.h" />
     <ClInclude Include="GraphicsTool.h" />
+    <ClInclude Include="Rectangle.h" />
+    <ClInclude Include="Shape.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Control.cpp" />
+    <ClCompile Include="DrawingSingleton.cpp" />
     <ClCompile Include="EasyGraphics.cpp" />
     <ClCompile Include="GraphicsTool.cpp" />
     <ClCompile Include="Main.cpp" />
+    <ClCompile Include="Rectangle.cpp" />
+    <ClCompile Include="Shape.cpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
