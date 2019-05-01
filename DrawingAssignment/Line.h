@@ -8,5 +8,6 @@ public:
 	~Line();
 
 	void draw(EasyGraphics* canvas);
+	bool isClicked(int x, int y);
 };
 

@@ -7,7 +7,9 @@ public:
 	Shape(int startX, int startY, int endX, int endY, int lineColour, int fillColour = NULL);
 	~Shape();
 
-	virtual void draw(EasyGraphics* canvas) = 0;	
+	virtual void draw(EasyGraphics* canvas) = 0;
+	virtual bool isClicked(int x, int y) = 0;
+	void moveTo(int x, int y);
 
 protected:
 	// Position

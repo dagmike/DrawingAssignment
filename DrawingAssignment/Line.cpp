@@ -14,3 +14,9 @@ void Line::draw(EasyGraphics* canvas)
 	canvas->setPenColour(lineColour, 1);
 	canvas->drawLine(startX, startY, endX, endY);
 }
+
+bool Line::isClicked(int x, int y)
+{
+	return (x >= startX && x <= endX)
+		&& (y >= startY && y <= endY);
+}

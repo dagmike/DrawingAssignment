@@ -23,6 +23,7 @@ private:
 	int controlsMargin;
 	bool isLButtonDown;
 	Control* currentControl;
+	Shape* selectedShape;
 
 	int startX, startY;
 	int endX, endY;

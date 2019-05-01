@@ -6,6 +6,7 @@ GraphicsTool::GraphicsTool(HINSTANCE hInstance)
 	// Create the window
 	create(hInstance, 800, 800, 40, true);
 	this->isLButtonDown = false;
+	this->setImmediateDrawMode(true);
 }
 
 
@@ -25,6 +26,7 @@ void GraphicsTool::onCreate()
 	controls.push_back(new Control(L"Rectangle", 0, 0, L"icons/rectangle.bmp", true));
 	controls.push_back(new Control(L"Circle", 0, 50, L"icons/circle.bmp", true));
 	controls.push_back(new Control(L"Line", 0, 100, L"icons/line.bmp", true));
+	controls.push_back(new Control(L"Move", 0, 150, L"icons/move.bmp"));
 
 	this->controlsMargin = 50;
 
@@ -67,6 +69,15 @@ void GraphicsTool::onLButtonDown(UINT nFlags, int x, int y)
 	}
 	else {
 		// On the drawable area
+		if (this->currentControl->getName() == L"Move") {
+			// Check if any of the shapes have been clicked
+			for (Shape* shape : DrawingSingleton::GetInstance()->getShapes()) {
+				if (shape->isClicked(x, y)) {
+					// This is the selected shape
+					this->selectedShape = shape;
+				}
+			}
+		}
 	}
 	
 
@@ -99,6 +110,11 @@ void GraphicsTool::onLButtonUp(UINT nFlags, int x, int y)
 				lineColour,
 				fillColour
 			);
+		}
+		else if (this->currentControl->getName() == L"Move" && this->selectedShape != NULL) {
+			// Move that shape to a diff position
+			this->selectedShape->moveTo(x, y);
+			this->selectedShape = NULL;
 		}
 	}
 	
