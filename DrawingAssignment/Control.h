@@ -1,5 +1,6 @@
 #pragma once
 #include "EasyGraphics.h"
+#include <string>
 
 class Control
 {
@@ -8,10 +9,12 @@ public:
 	~Control();
 
 	void draw(EasyGraphics* canvas) const;
+	inline const wchar_t* getName() const;
 	inline bool isClicked(int clickX, int clickY) const;
 	void handleClick();
 	void deselect();
 	inline bool isShapeControl() const;
+
 
 private:
 	// Position
@@ -37,4 +40,9 @@ bool Control::isClicked(int clickX, int clickY) const
 bool Control::isShapeControl() const
 {
 	return shapeControl;
+}
+
+inline const wchar_t* Control::getName() const
+{
+	return this->name;
 }

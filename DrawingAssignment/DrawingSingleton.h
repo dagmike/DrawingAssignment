@@ -2,7 +2,7 @@
 #include <vector>
 #include <string>
 #include "Shape.h"
-#include "Rectangle.h"
+#include "Quadrilateral.h"
 
 class DrawingSingleton
 {
@@ -17,7 +17,7 @@ private:
 public:
 	~DrawingSingleton();
 
-	void addShape(std::string shapeName, int startX, int startY, int endX, int endY, int lineColour, int fillColour);
+	void addShape(const wchar_t* shapeName, int startX, int startY, int endX, int endY, int lineColour, int fillColour);
 	std::vector<Shape*> getShapes() const;
 
 	// Access the single instance

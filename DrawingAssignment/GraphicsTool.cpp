@@ -39,7 +39,11 @@ void GraphicsTool::onDraw()
 	for (Control* control : controls) {
 		control->draw(this);
 	}
-	// std::for_each(controls.begin(), controls.end(), &draw);
+
+	// Draw the current drawing
+	for (Shape* shape : DrawingSingleton::GetInstance()->getShapes()) {
+		shape->draw(this);
+	}
 }
 
 void GraphicsTool::onLButtonDown(UINT nFlags, int x, int y)
@@ -85,9 +89,16 @@ void GraphicsTool::onLButtonUp(UINT nFlags, int x, int y)
 			int lineColour = EasyGraphics::clBlack;
 			// Get the fill colour
 			int fillColour = NULL;
-			// Save the shape in storage (singleton i believe)
-			DrawingSingleton::GetInstance()->addShape();
-			
+			// Save the shape in storage
+			DrawingSingleton::GetInstance()->addShape(
+				this->currentControl->getName(),
+				this->startX,
+				this->startY,
+				this->endX,
+				this->endY,
+				lineColour,
+				fillColour
+			);
 		}
 	}
 	
@@ -95,4 +106,6 @@ void GraphicsTool::onLButtonUp(UINT nFlags, int x, int y)
 	this->startY = NULL;
 	this->endX = NULL;
 	this->endY = NULL;
+
+	this->onDraw();
 }

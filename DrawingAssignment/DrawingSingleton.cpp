@@ -29,15 +29,15 @@ void DrawingSingleton::DeleteInstance()
 	delete inst;
 }
 
-void DrawingSingleton::addShape(std::string shapeName, int startX, int startY, int endX, int endY, int lineColour, int fillColour)
+void DrawingSingleton::addShape(const wchar_t* shapeName, int startX, int startY, int endX, int endY, int lineColour, int fillColour)
 {
-	if (shapeName == "Rectangle") {
-		shapes.push_back(new Rectangle(startX, startY, endX, endY, lineColour, fillColour));
+	if (shapeName == L"Rectangle") {
+		shapes.push_back(new Quadrilateral(startX, startY, endX, endY, lineColour, fillColour));
 	}
-	else if (shapeName == "Circle") {
+	else if (shapeName == L"Circle") {
 
 	}
-	else if (shapeName == "Line") {
+	else if (shapeName == L"Line") {
 
 	}
 }
