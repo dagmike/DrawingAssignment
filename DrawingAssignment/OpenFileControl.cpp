@@ -39,8 +39,8 @@ void OpenFileControl::handleClick()
 			int startY = std::stoi(tokens.at(2));
 			int endX = std::stoi(tokens.at(3));
 			int endY = std::stoi(tokens.at(4));
-			int lineColour = tokens.at(5) == "NULL" ? NULL : std::stoi(tokens.at(5), nullptr, 0);
-			int fillColour = tokens.at(6) == "NULL" ? NULL : std::stoi(tokens.at(6), nullptr, 0);
+			int lineColour = tokens.at(5) == "NULL" ? NULL : std::stoi(tokens.at(5), nullptr, 16);
+			int fillColour = tokens.at(6) == "NULL" ? NULL : std::stoi(tokens.at(6), nullptr, 16);
 
 			DrawingSingleton::GetInstance()->addShape(
 				shapeName.c_str(),

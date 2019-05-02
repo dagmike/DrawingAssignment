@@ -4,6 +4,7 @@
 #include "ColourControl.h"
 #include "ShapeControl.h"
 #include "OpenFileControl.h"
+#include "SaveFileControl.h"
 #include "Shape.h"
 #include <vector>
 #include <algorithm>

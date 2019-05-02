@@ -7,7 +7,7 @@ GraphicsTool::GraphicsTool(HINSTANCE hInstance)
 	this->setImmediateDrawMode(false);
 
 	// Create the window
-	create(hInstance, 800, 800, 40, true);
+	create(hInstance, 800, 814, 40, true);
 }
 
 
@@ -50,6 +50,7 @@ void GraphicsTool::onCreate()
 
 	// Add file controls
 	controls.push_back(new OpenFileControl(L"OpenFile", 0, 675, L"icons/openFile.bmp"));
+	controls.push_back(new SaveFileControl(L"SaveFile", 0, 725, L"icons/saveFile.bmp"));
 
 	// Set default control to rectangle
 	this->currentControl = controls.front();

@@ -19,9 +19,8 @@ public:
 	int getStartY() const;
 	int getEndX() const;
 	int getEndY() const;
-
-	
-
+	int getLineColour() const;
+	int getFillColour() const;
 protected:
 	// Position
 	int startX, startY;
@@ -48,5 +47,15 @@ inline int Shape::getEndX() const
 inline int Shape::getEndY() const
 {
 	return endY;
+}
+
+inline int Shape::getLineColour() const
+{
+	return lineColour;
+}
+
+inline int Shape::getFillColour() const
+{
+	return fillColour;
 }
 
