@@ -15,7 +15,7 @@ private:
 	std::vector<Shape*> shapes;
 
 	// Hide so cannot be instantiated
-	DrawingSingleton() {}
+	DrawingSingleton();
 public:
 	~DrawingSingleton();
 

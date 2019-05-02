@@ -3,10 +3,11 @@
 
 GraphicsTool::GraphicsTool(HINSTANCE hInstance)
 {
-	// Create the window
-	create(hInstance, 800, 800, 40, true);
 	this->isLButtonDown = false;
 	this->setImmediateDrawMode(false);
+
+	// Create the window
+	create(hInstance, 800, 800, 40, true);
 }
 
 
@@ -127,11 +128,16 @@ void GraphicsTool::onLButtonDown(UINT nFlags, int x, int y)
 			if (shape->isClicked(x, y)) {
 				// This is the selected shape
 				this->selectedShape = shape;
+
+				this->shapeStartXDiff = x - shape->getStartX();
+				this->shapeStartYDiff = y - shape->getStartY();
+				this->shapeEndXDiff = shape->getEndX() - x;
+				this->shapeEndYDiff = shape->getEndY() - y;
 			}
 		}
 
-		if (this->selectedShape == NULL) {
-			ShapeControl* shapeControl = dynamic_cast<ShapeControl*>(this->currentControl);
+		ShapeControl* shapeControl = dynamic_cast<ShapeControl*>(this->currentControl);
+		if (shapeControl != NULL) {
 			// Create a base shape so we can edit it
 			DrawingSingleton::GetInstance()->addShape(
 				shapeControl->getName(),
@@ -159,10 +165,16 @@ void GraphicsTool::onMouseMove(UINT nFlags, int x, int y)
 			latestShape->setEndCoordinates(x, y);
 		}
 		else if (this->currentControl->getName() == L"Move" && this->selectedShape != NULL) {
-			// Move that shape to a diff position
-			this->selectedShape->moveTo(x, y);
-		}
+			int xDiff = 0;
+			
 
+			int yDiff = 0;
+			
+			this->selectedShape->setStartCoordinates(x - this->shapeStartXDiff, y - this->shapeStartYDiff);
+			this->selectedShape->setEndCoordinates(x + this->shapeEndXDiff, y + this->shapeEndYDiff);
+			// Move that shape to a diff position
+			// this->selectedShape->moveBy(xDiff, yDiff);
+		}
 		this->onDraw();
 	}
 }
@@ -170,7 +182,6 @@ void GraphicsTool::onMouseMove(UINT nFlags, int x, int y)
 void GraphicsTool::onLButtonUp(UINT nFlags, int x, int y)
 {
 	this->isLButtonDown = false;
-
 	// Set the ending position
 	this->endX = x;
 	this->endY = y;
@@ -185,7 +196,8 @@ void GraphicsTool::onLButtonUp(UINT nFlags, int x, int y)
 		}
 		else if (this->currentControl->getName() == L"Move" && this->selectedShape != NULL) {
 			// Move that shape to a diff position
-			this->selectedShape->moveTo(x, y);
+			this->selectedShape->setStartCoordinates(x - this->shapeStartXDiff, y - this->shapeStartYDiff);
+			this->selectedShape->setEndCoordinates(x + this->shapeEndXDiff, y + this->shapeEndYDiff);
 			this->selectedShape = NULL;
 		}
 		else if (this->currentControl->getName() == L"Delete" && this->selectedShape != NULL) {

@@ -7,12 +7,14 @@ DrawingSingleton* DrawingSingleton::GetInstance()
 	// If instance doesn't already exist
 	if (inst == nullptr) {
 		// Create the instance and store it
-		inst = new DrawingSingleton();
+		inst = new DrawingSingleton;
 	}
 
 	// Return the instance
 	return inst;
 }
+
+DrawingSingleton::DrawingSingleton() {}
 
 DrawingSingleton::~DrawingSingleton()
 {

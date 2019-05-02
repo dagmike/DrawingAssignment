@@ -27,6 +27,10 @@ private:
 	bool isLButtonDown;
 	Control* currentControl;
 	Shape* selectedShape;
+	Shape* currentShape;
+	
+	int shapeStartXDiff, shapeStartYDiff;
+	int shapeEndXDiff, shapeEndYDiff;
 
 	ColourControl* lineColour;
 	ColourControl* fillColour;

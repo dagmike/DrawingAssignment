@@ -2,6 +2,18 @@
 
 Circle::Circle(int startX, int startY, int endX, int endY, int lineColour, int fillColour) : Shape(startX, startY, endX, endY, lineColour, fillColour)
 {
+}
+
+
+Circle::~Circle()
+{
+}
+
+void Circle::draw(EasyGraphics* canvas)
+{
+	canvas->setPenColour(lineColour, 1);
+	canvas->selectBackColour(fillColour);
+
 	// Calculate radius
 	// a^2 + b^2 = c^2 (radius)
 	int horizontal = endX - startX;
@@ -15,17 +27,7 @@ Circle::Circle(int startX, int startY, int endX, int endY, int lineColour, int f
 		vertical *= -1;
 
 	this->radius = floor(sqrt(pow(horizontal, 2) + pow(vertical, 2)));
-}
 
-
-Circle::~Circle()
-{
-}
-
-void Circle::draw(EasyGraphics* canvas)
-{
-	canvas->setPenColour(lineColour, 1);
-	canvas->selectBackColour(fillColour);
 	canvas->drawCircle(startX, startY, radius, fillColour != NULL);
 }
 

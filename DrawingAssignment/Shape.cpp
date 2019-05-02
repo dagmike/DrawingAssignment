@@ -29,3 +29,17 @@ void Shape::setEndCoordinates(int endX, int endY)
 	this->endX = endX;
 	this->endY = endY;
 }
+
+void Shape::moveBy(int x, int y)
+{
+	this->startX += x;
+	this->startY += y;
+	this->endX += x;
+	this->endY += y;
+}
+
+void Shape::setStartCoordinates(int startX, int startY)
+{
+	this->startX = startX;
+	this->startY = startY;
+}
