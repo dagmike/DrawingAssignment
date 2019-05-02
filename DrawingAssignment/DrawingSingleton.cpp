@@ -33,13 +33,13 @@ void DrawingSingleton::DeleteInstance()
 
 void DrawingSingleton::addShape(const wchar_t* shapeName, int startX, int startY, int endX, int endY, int lineColour, int fillColour)
 {
-	if (shapeName == L"Rectangle") {
+	if (*shapeName == *L"Rectangle") {
 		shapes.push_back(new Quadrilateral(startX, startY, endX, endY, lineColour, fillColour));
 	}
-	else if (shapeName == L"Circle") {
+	else if (*shapeName == *L"Circle") {
 		shapes.push_back(new Circle(startX, startY, endX, endY, lineColour, fillColour));
 	}
-	else if (shapeName == L"Line") {
+	else if (*shapeName == *L"Line") {
 		shapes.push_back(new Line(startX, startY, endX, endY, lineColour, fillColour));
 	}
 }

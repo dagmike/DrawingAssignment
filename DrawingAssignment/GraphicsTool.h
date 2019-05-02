@@ -3,6 +3,7 @@
 #include "Control.h"
 #include "ColourControl.h"
 #include "ShapeControl.h"
+#include "OpenFileControl.h"
 #include "Shape.h"
 #include <vector>
 #include <algorithm>

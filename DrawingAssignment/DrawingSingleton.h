@@ -24,6 +24,7 @@ public:
 	Shape* getShape(int i) const;
 	Shape* getLatestShape();
 	void removeShape(int i);
+	void clearShapes();
 
 	// Access the single instance
 	static DrawingSingleton* GetInstance();
@@ -56,3 +57,11 @@ inline Shape* DrawingSingleton::getLatestShape()
 	return shapes.back();
 }
 
+inline void DrawingSingleton::clearShapes()
+{
+	for (Shape* shape : shapes) {
+		delete shape;
+	}
+
+	shapes.clear();
+}

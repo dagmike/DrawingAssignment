@@ -48,6 +48,8 @@ void GraphicsTool::onCreate()
 	controls.push_back(new ColourControl(L"FillBlue", 0, 550, L"icons/colours/blueFill.bmp", EasyGraphics::clBlue, true));
 	controls.push_back(new ColourControl(L"FillNone", 0, 600, L"icons/colours/noFill.bmp", NULL, true));
 
+	// Add file controls
+	controls.push_back(new OpenFileControl(L"OpenFile", 0, 675, L"icons/openFile.bmp"));
 
 	// Set default control to rectangle
 	this->currentControl = controls.front();
@@ -149,6 +151,8 @@ void GraphicsTool::onLButtonDown(UINT nFlags, int x, int y)
 				this->fillColour->getColour()
 			);
 		}
+
+		this->onDraw();
 	}
 }
 
