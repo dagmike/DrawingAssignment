@@ -23,3 +23,9 @@ void Shape::moveTo(int x, int y)
 	this->endX = this->endX + xDiff;
 	this->endY = this->endY + yDiff;
 }
+
+void Shape::setEndCoordinates(int endX, int endY)
+{
+	this->endX = endX;
+	this->endY = endY;
+}

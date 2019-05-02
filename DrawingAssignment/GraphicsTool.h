@@ -2,6 +2,7 @@
 #include "EasyGraphics.h"
 #include "Control.h"
 #include "ColourControl.h"
+#include "ShapeControl.h"
 #include "Shape.h"
 #include <vector>
 #include <algorithm>
@@ -18,7 +19,7 @@ public:
 	void onDraw();
 	void onLButtonDown(UINT nFlags, int x, int y);
 	void onLButtonUp(UINT nFlags, int x, int y);
-
+	void onMouseMove(UINT nFlags, int x, int y);
 private:
 	std::vector<Shape*> shapes;
 	std::vector<Control*> controls;

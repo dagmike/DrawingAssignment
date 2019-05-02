@@ -22,6 +22,7 @@ public:
 	void addShape(const wchar_t* shapeName, int startX, int startY, int endX, int endY, int lineColour, int fillColour);
 	std::vector<Shape*> getShapes() const;
 	Shape* getShape(int i) const;
+	Shape* getLatestShape();
 	void removeShape(int i);
 
 	// Access the single instance
@@ -48,5 +49,10 @@ inline void DrawingSingleton::removeShape(int i)
 {
 	delete shapes[i];
 	shapes.erase(shapes.begin() + i);
+}
+
+inline Shape* DrawingSingleton::getLatestShape()
+{
+	return shapes.back();
 }
 

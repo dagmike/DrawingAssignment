@@ -9,6 +9,7 @@ public:
 
 	virtual void draw(EasyGraphics* canvas) = 0;
 	virtual bool isClicked(int x, int y) = 0;
+	void setEndCoordinates(int endX, int endY);
 	void moveTo(int x, int y);
 
 protected:

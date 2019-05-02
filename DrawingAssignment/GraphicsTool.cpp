@@ -6,13 +6,20 @@ GraphicsTool::GraphicsTool(HINSTANCE hInstance)
 	// Create the window
 	create(hInstance, 800, 800, 40, true);
 	this->isLButtonDown = false;
-	this->setImmediateDrawMode(true);
+	this->setImmediateDrawMode(false);
 }
 
 
 GraphicsTool::~GraphicsTool()
 {
+	// Tidy up the controls
+	for (Control* control : controls) {
+		delete control;
+	}
 
+	controls.clear();
+
+	DrawingSingleton::DeleteInstance();
 }
 
 void GraphicsTool::onCreate()
@@ -23,9 +30,9 @@ void GraphicsTool::onCreate()
 	::SetWindowText(getHWND(), L"Graphics Tool");
 
 	// Create the controls
-	controls.push_back(new Control(L"Rectangle", 0, 0, L"icons/rectangle.bmp", true));
-	controls.push_back(new Control(L"Circle", 0, 50, L"icons/circle.bmp", true));
-	controls.push_back(new Control(L"Line", 0, 100, L"icons/line.bmp", true));
+	controls.push_back(new ShapeControl(L"Rectangle", 0, 0, L"icons/rectangle.bmp"));
+	controls.push_back(new ShapeControl(L"Circle", 0, 50, L"icons/circle.bmp"));
+	controls.push_back(new ShapeControl(L"Line", 0, 100, L"icons/line.bmp"));
 	controls.push_back(new Control(L"Move", 0, 150, L"icons/move.bmp"));
 	controls.push_back(new Control(L"Delete", 0, 200, L"icons/delete.bmp"));
 
@@ -33,6 +40,7 @@ void GraphicsTool::onCreate()
 	controls.push_back(new ColourControl(L"LineRed", 0, 275, L"icons/colours/redLine.bmp", EasyGraphics::clRed, false));
 	controls.push_back(new ColourControl(L"LineGreen", 0, 325, L"icons/colours/greenLine.bmp", EasyGraphics::clGreen, false));
 	controls.push_back(new ColourControl(L"LineBlue", 0, 375, L"icons/colours/blueLine.bmp", EasyGraphics::clBlue, false));
+
 	// Add fill colour controls
 	controls.push_back(new ColourControl(L"FillRed", 0, 450, L"icons/colours/redFill.bmp", EasyGraphics::clRed, true));
 	controls.push_back(new ColourControl(L"FillGreen", 0, 500, L"icons/colours/greenFill.bmp", EasyGraphics::clGreen, true));
@@ -68,6 +76,8 @@ void GraphicsTool::onDraw()
 	for (Shape* shape : DrawingSingleton::GetInstance()->getShapes()) {
 		shape->draw(this);
 	}
+
+	EasyGraphics::onDraw();
 }
 
 void GraphicsTool::onLButtonDown(UINT nFlags, int x, int y)
@@ -119,9 +129,42 @@ void GraphicsTool::onLButtonDown(UINT nFlags, int x, int y)
 				this->selectedShape = shape;
 			}
 		}
-	}
 
-	this->onDraw();
+		if (this->selectedShape == NULL) {
+			ShapeControl* shapeControl = dynamic_cast<ShapeControl*>(this->currentControl);
+			// Create a base shape so we can edit it
+			DrawingSingleton::GetInstance()->addShape(
+				shapeControl->getName(),
+				this->startX,
+				this->startY,
+				this->startX,
+				this->startY,
+				this->lineColour->getColour(),
+				this->fillColour->getColour()
+			);
+		}
+	}
+}
+
+void GraphicsTool::onMouseMove(UINT nFlags, int x, int y)
+{
+	if (this->isLButtonDown && x >= this->controlsMargin) {
+		// Dragging something
+		ShapeControl* shapeControl = dynamic_cast<ShapeControl*>(this->currentControl);
+		// If the control is a shape
+		if (shapeControl != NULL) {
+			// Get the latest shape
+			Shape* latestShape = DrawingSingleton::GetInstance()->getLatestShape();
+			// Save the shape in storage
+			latestShape->setEndCoordinates(x, y);
+		}
+		else if (this->currentControl->getName() == L"Move" && this->selectedShape != NULL) {
+			// Move that shape to a diff position
+			this->selectedShape->moveTo(x, y);
+		}
+
+		this->onDraw();
+	}
 }
 
 void GraphicsTool::onLButtonUp(UINT nFlags, int x, int y)
@@ -134,18 +177,11 @@ void GraphicsTool::onLButtonUp(UINT nFlags, int x, int y)
 
 	// Figure out if the drawable area is clicked or not
 	if (x >= this->controlsMargin) {
+		ShapeControl* shapeControl = dynamic_cast<ShapeControl*>(this->currentControl);
 		// If the control is a shape
-		if (this->currentControl->isShapeControl()) {
-			// Save the shape in storage
-			DrawingSingleton::GetInstance()->addShape(
-				this->currentControl->getName(),
-				this->startX,
-				this->startY,
-				this->endX,
-				this->endY,
-				this->lineColour->getColour(),
-				this->fillColour->getColour()
-			);
+		if (shapeControl != NULL) {
+			Shape* latestShape = DrawingSingleton::GetInstance()->getLatestShape();
+			latestShape->setEndCoordinates(this->endX, this->endY);
 		}
 		else if (this->currentControl->getName() == L"Move" && this->selectedShape != NULL) {
 			// Move that shape to a diff position
@@ -163,11 +199,11 @@ void GraphicsTool::onLButtonUp(UINT nFlags, int x, int y)
 			}
 		}
 	}
+
+	this->onDraw();
 	
 	this->startX = NULL;
 	this->startY = NULL;
 	this->endX = NULL;
 	this->endY = NULL;
-
-	this->onDraw();
 }
