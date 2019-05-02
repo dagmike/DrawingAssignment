@@ -102,10 +102,12 @@ void GraphicsTool::onLButtonDown(UINT nFlags, int x, int y)
 				if (colourControl == NULL && control != this->currentControl) {
 					// Not a colour control
 					control->handleClick();
-					// Deselect old control
-					this->currentControl->deselect();
-					// Set current control
-					this->currentControl = control;
+					if (control->getName() != L"OpenFile" && control->getName() != L"SaveFile") {
+						// Deselect old control
+						this->currentControl->deselect();
+						// Set current control
+						this->currentControl = control;
+					}
 				}
 				else if (colourControl != NULL) {
 					int colour = colourControl->getColour();
