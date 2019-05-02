@@ -1,8 +1,10 @@
 #pragma once
 #include "EasyGraphics.h"
 #include "Control.h"
+#include "ColourControl.h"
 #include "Shape.h"
 #include <vector>
+#include <algorithm>
 #include "DrawingSingleton.h"
 
 class GraphicsTool
@@ -24,6 +26,9 @@ private:
 	bool isLButtonDown;
 	Control* currentControl;
 	Shape* selectedShape;
+
+	ColourControl* lineColour;
+	ColourControl* fillColour;
 
 	int startX, startY;
 	int endX, endY;

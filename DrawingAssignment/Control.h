@@ -11,7 +11,7 @@ public:
 	void draw(EasyGraphics* canvas) const;
 	inline const wchar_t* getName() const;
 	inline bool isClicked(int clickX, int clickY) const;
-	void handleClick();
+	virtual void handleClick();
 	void deselect();
 	inline bool isShapeControl() const;
 

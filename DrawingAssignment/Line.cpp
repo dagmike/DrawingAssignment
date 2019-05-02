@@ -17,6 +17,20 @@ void Line::draw(EasyGraphics* canvas)
 
 bool Line::isClicked(int x, int y)
 {
-	return (x >= startX && x <= endX)
-		&& (y >= startY && y <= endY);
+	bool isBetweenX, isBetweenY;
+	if (startX > endX) {
+		isBetweenX = (x <= startX && x >= endX);
+	}
+	else {
+		isBetweenX = (x >= startX && x <= endX);
+	}
+
+	if (startY > endY) {
+		isBetweenY = (y <= startY && y >= endY);
+	}
+	else {
+		isBetweenY = (y >= startY && y <= endY);
+	}
+
+	return isBetweenX && isBetweenY;
 }

@@ -25,7 +25,8 @@ Circle::~Circle()
 void Circle::draw(EasyGraphics* canvas)
 {
 	canvas->setPenColour(lineColour, 1);
-	canvas->drawCircle(startX, startY, radius, false);
+	canvas->selectBackColour(fillColour);
+	canvas->drawCircle(startX, startY, radius, fillColour != NULL);
 }
 
 bool Circle::isClicked(int x, int y)

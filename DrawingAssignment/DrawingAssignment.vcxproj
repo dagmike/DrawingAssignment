@@ -144,6 +144,7 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClInclude Include="Circle.h" />
+    <ClInclude Include="ColourControl.h" />
     <ClInclude Include="Control.h" />
     <ClInclude Include="DrawingSingleton.h" />
     <ClInclude Include="EasyGraphics.h" />
@@ -154,6 +155,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Circle.cpp" />
+    <ClCompile Include="ColourControl.cpp" />
     <ClCompile Include="Control.cpp" />
     <ClCompile Include="DrawingSingleton.cpp" />
     <ClCompile Include="EasyGraphics.cpp" />

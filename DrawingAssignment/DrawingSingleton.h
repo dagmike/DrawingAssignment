@@ -21,6 +21,8 @@ public:
 
 	void addShape(const wchar_t* shapeName, int startX, int startY, int endX, int endY, int lineColour, int fillColour);
 	std::vector<Shape*> getShapes() const;
+	Shape* getShape(int i) const;
+	void removeShape(int i);
 
 	// Access the single instance
 	static DrawingSingleton* GetInstance();
@@ -35,5 +37,16 @@ public:
 inline std::vector<Shape*> DrawingSingleton::getShapes() const
 {
 	return shapes;
+}
+
+inline Shape* DrawingSingleton::getShape(int i) const
+{
+	return shapes[i];
+}
+
+inline void DrawingSingleton::removeShape(int i)
+{
+	delete shapes[i];
+	shapes.erase(shapes.begin() + i);
 }
 

@@ -27,9 +27,31 @@ void GraphicsTool::onCreate()
 	controls.push_back(new Control(L"Circle", 0, 50, L"icons/circle.bmp", true));
 	controls.push_back(new Control(L"Line", 0, 100, L"icons/line.bmp", true));
 	controls.push_back(new Control(L"Move", 0, 150, L"icons/move.bmp"));
+	controls.push_back(new Control(L"Delete", 0, 200, L"icons/delete.bmp"));
+
+	// Add line colour controls
+	controls.push_back(new ColourControl(L"LineRed", 0, 275, L"icons/colours/redLine.bmp", EasyGraphics::clRed, false));
+	controls.push_back(new ColourControl(L"LineGreen", 0, 325, L"icons/colours/greenLine.bmp", EasyGraphics::clGreen, false));
+	controls.push_back(new ColourControl(L"LineBlue", 0, 375, L"icons/colours/blueLine.bmp", EasyGraphics::clBlue, false));
+	// Add fill colour controls
+	controls.push_back(new ColourControl(L"FillRed", 0, 450, L"icons/colours/redFill.bmp", EasyGraphics::clRed, true));
+	controls.push_back(new ColourControl(L"FillGreen", 0, 500, L"icons/colours/greenFill.bmp", EasyGraphics::clGreen, true));
+	controls.push_back(new ColourControl(L"FillBlue", 0, 550, L"icons/colours/blueFill.bmp", EasyGraphics::clBlue, true));
+	controls.push_back(new ColourControl(L"FillNone", 0, 600, L"icons/colours/noFill.bmp", NULL, true));
+
+
+	// Set default control to rectangle
+	this->currentControl = controls.front();
+	this->currentControl->handleClick();
+
+	// Set default colours
+	this->lineColour = dynamic_cast<ColourControl*>(controls[5]);
+	this->lineColour->handleClick();
+	this->fillColour = dynamic_cast<ColourControl*>(controls[8]);
+	this->fillColour->handleClick();
+
 
 	this->controlsMargin = 50;
-
 }
 
 void GraphicsTool::onDraw()
@@ -60,26 +82,44 @@ void GraphicsTool::onLButtonDown(UINT nFlags, int x, int y)
 	if (x <= this->controlsMargin) {
 		for (Control* control : controls) {
 			if (control->isClicked(x, y)) {
-				control->handleClick();
-				this->currentControl = control;
-			}
-			else
-				control->deselect();
-		}
-	}
-	else {
-		// On the drawable area
-		if (this->currentControl->getName() == L"Move") {
-			// Check if any of the shapes have been clicked
-			for (Shape* shape : DrawingSingleton::GetInstance()->getShapes()) {
-				if (shape->isClicked(x, y)) {
-					// This is the selected shape
-					this->selectedShape = shape;
+				// See if it is a colour control
+				ColourControl* colourControl = dynamic_cast<ColourControl*>(control);
+				
+				if (colourControl == NULL && control != this->currentControl) {
+					// Not a colour control
+					control->handleClick();
+					// Deselect old control
+					this->currentControl->deselect();
+					// Set current control
+					this->currentControl = control;
+				}
+				else if (colourControl != NULL) {
+					int colour = colourControl->getColour();
+					
+
+					if (colourControl->isFill()) {
+						this->fillColour->deselect();
+						this->fillColour = colourControl;
+					}
+					else {
+						this->lineColour->deselect();
+						this->lineColour = colourControl;
+					}
+
+					control->handleClick();
 				}
 			}
 		}
 	}
-	
+	else {
+		// Check if any of the shapes have been clicked
+		for (Shape* shape : DrawingSingleton::GetInstance()->getShapes()) {
+			if (shape->isClicked(x, y)) {
+				// This is the selected shape
+				this->selectedShape = shape;
+			}
+		}
+	}
 
 	this->onDraw();
 }
@@ -96,10 +136,6 @@ void GraphicsTool::onLButtonUp(UINT nFlags, int x, int y)
 	if (x >= this->controlsMargin) {
 		// If the control is a shape
 		if (this->currentControl->isShapeControl()) {
-			// Get the line colour
-			int lineColour = EasyGraphics::clBlack;
-			// Get the fill colour
-			int fillColour = NULL;
 			// Save the shape in storage
 			DrawingSingleton::GetInstance()->addShape(
 				this->currentControl->getName(),
@@ -107,14 +143,24 @@ void GraphicsTool::onLButtonUp(UINT nFlags, int x, int y)
 				this->startY,
 				this->endX,
 				this->endY,
-				lineColour,
-				fillColour
+				this->lineColour->getColour(),
+				this->fillColour->getColour()
 			);
 		}
 		else if (this->currentControl->getName() == L"Move" && this->selectedShape != NULL) {
 			// Move that shape to a diff position
 			this->selectedShape->moveTo(x, y);
 			this->selectedShape = NULL;
+		}
+		else if (this->currentControl->getName() == L"Delete" && this->selectedShape != NULL) {
+			// Check if any of the shapes have been clicked
+			DrawingSingleton* data = DrawingSingleton::GetInstance();
+
+			for (int i = 0; i < data->getShapes().size(); i++) {
+				if (this->selectedShape == data->getShape(i)) {
+					data->removeShape(i);
+				}
+			}
 		}
 	}
 	
