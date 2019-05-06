@@ -15,7 +15,8 @@ void SaveFileControl::handleClick()
 {
 	// Open a file
 	std::ofstream drawingFile;
-	drawingFile.open("saveDrawing.img.csv");
+	drawingFile.open("drawing.img.csv");
+
 	for (Shape* shape : DrawingSingleton::GetInstance()->getShapes()) {
 		// Get the shape name as a string
 		std::string shapeName("Rectangle");
@@ -36,5 +37,6 @@ void SaveFileControl::handleClick()
 		drawingFile << shapeName << "," << shape->getStartX() << "," << shape->getStartY() << "," << shape->getEndX() << "," << shape->getEndY() << "," << lineStream.str() << "," << fillStream.str();
 		drawingFile << "\n";
 	}
+
 	drawingFile.close();
 }
