@@ -126,6 +126,10 @@ void GraphicsTool::onLButtonDown(UINT nFlags, int x, int y)
 					// Set current control
 					this->currentControl = control;
 				}
+
+				if (this->currentControl->getName() != L"Select" && this->selectedShape != NULL) {
+					this->selectedShape->setIsSelected(false);
+				}
 			}
 			else if (colourControl != NULL) {
 				int colour = colourControl->getColour();
@@ -162,6 +166,7 @@ void GraphicsTool::onLButtonDown(UINT nFlags, int x, int y)
 							shape->setIsSelected(!this->selectedShape->isSelected());
 						}
 						else {
+							this->selectedShape->setIsSelected(false);
 							shape->setIsSelected(true);
 						}
 					}
@@ -196,13 +201,13 @@ void GraphicsTool::onLButtonDown(UINT nFlags, int x, int y)
 						}
 					}
 				}
+				else {
+					shape->setIsSelected(false);
+				}
 
-				if (shape->isSelected()) {
+				if (shape->isSelected() || this->currentControl->getName() == L"Move") {
 					// This is the selected shape
 					this->selectedShape = shape;
-				}
-				else {
-					this->selectedShape = NULL;
 				}
 				
 
