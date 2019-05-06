@@ -84,3 +84,15 @@ inline void Shape::setFillColour(int colour)
 {
 	this->fillColour = colour;
 }
+
+inline void Shape::setEndCoordinates(int endX, int endY)
+{
+	this->endX = endX;
+	this->endY = endY;
+}
+
+inline void Shape::setStartCoordinates(int startX, int startY)
+{
+	this->startX = startX;
+	this->startY = startY;
+}

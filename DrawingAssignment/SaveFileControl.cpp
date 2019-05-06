@@ -17,26 +17,33 @@ void SaveFileControl::handleClick()
 	std::ofstream drawingFile;
 	drawingFile.open("drawing.img.csv");
 
-	for (Shape* shape : DrawingSingleton::GetInstance()->getShapes()) {
-		// Get the shape name as a string
-		std::string shapeName("Rectangle");
-		if (Circle* circle = dynamic_cast<Circle*>(shape)) {
-			shapeName = "Circle";
-		}
-		else if (Line* line = dynamic_cast<Line*>(shape)) {
-			shapeName = "Line";
+	if (drawingFile) {
+		for (Shape* shape : DrawingSingleton::GetInstance()->getShapes()) {
+			// Get the shape name as a string
+			std::string shapeName("Rectangle");
+			if (Circle* circle = dynamic_cast<Circle*>(shape)) {
+				shapeName = "Circle";
+			}
+			else if (Line* line = dynamic_cast<Line*>(shape)) {
+				shapeName = "Line";
+			}
+
+			// Get hex string of the line colour
+			std::stringstream lineStream;
+			lineStream << std::hex << shape->getLineColour();
+
+			std::stringstream fillStream;
+			fillStream << std::hex << shape->getFillColour();
+
+			drawingFile << shapeName << "," << shape->getStartX() << "," << shape->getStartY() << "," << shape->getEndX() << "," << shape->getEndY() << "," << lineStream.str() << "," << fillStream.str();
+			drawingFile << "\n";
 		}
 
-		// Get hex string of the line colour
-		std::stringstream lineStream;
-		lineStream << std::hex << shape->getLineColour();
-		
-		std::stringstream fillStream;
-		fillStream << std::hex << shape->getFillColour();
-
-		drawingFile << shapeName << "," << shape->getStartX() << "," << shape->getStartY() << "," << shape->getEndX() << "," << shape->getEndY() << "," << lineStream.str() << "," << fillStream.str();
-		drawingFile << "\n";
+		drawingFile.close();
 	}
+	else {
+		throw "Unable to open file.";
+	}
+	
 
-	drawingFile.close();
 }

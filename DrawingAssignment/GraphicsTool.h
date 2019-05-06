@@ -26,6 +26,7 @@ public:
 private:
 	std::vector<Shape*> shapes;
 	std::vector<Control*> controls;
+	const wchar_t* errMessage;
 	int controlsMargin;
 	bool isLButtonDown;
 	Control* currentControl;
@@ -43,6 +44,4 @@ private:
 
 	void drawShape(Shape* shape);
 	void drawControl(Control* control);
-
-	bool isColourControl(Control* control) const;
 };

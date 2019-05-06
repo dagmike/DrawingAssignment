@@ -54,7 +54,7 @@ inline void DrawingSingleton::removeShape(int i)
 
 inline Shape* DrawingSingleton::getLatestShape()
 {
-	return shapes.back();
+	return shapes.empty() ? NULL : shapes.back();
 }
 
 inline void DrawingSingleton::clearShapes()

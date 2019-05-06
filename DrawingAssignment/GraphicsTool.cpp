@@ -89,20 +89,27 @@ void GraphicsTool::onDraw()
 	std::vector<Shape*> shapes = DrawingSingleton::GetInstance()->getShapes();
 	std::for_each(shapes.begin(), shapes.end(), std::bind1st(std::mem_fun(&GraphicsTool::drawShape), this));
 
+	if (this->errMessage != NULL) {
+		// Draw the error message
+		this->selectTextColour(EasyGraphics::clDarkRed);
+		this->drawText(this->errMessage, 55, 0);
+	}
+
 	EasyGraphics::onDraw();
 }
 
 void GraphicsTool::onLButtonDown(UINT nFlags, int x, int y)
 {
 	this->isLButtonDown = true;
-	
+	this->errMessage = NULL;
+
 	// Set starting position in case of drag
 	this->startX = x;
 	this->startY = y;
 
 	// Figure out if the controls are touched or not
 	if (x <= this->controlsMargin) {
-
+	
 		// Find the control that is clicked
 		std::vector<Control*>::iterator selectedControl = std::find_if(controls.begin(), controls.end(), [&x, &y](Control* control)
 			{
@@ -119,7 +126,13 @@ void GraphicsTool::onLButtonDown(UINT nFlags, int x, int y)
 
 			if (colourControl == NULL && control != this->currentControl) {
 				// Not a colour control
-				control->handleClick();
+				try {
+					control->handleClick();
+				}
+				catch (const wchar_t* e) {
+					this->errMessage = e;
+				}
+
 				if (control->getName() != L"OpenFile" && control->getName() != L"SaveFile") {
 					// Deselect old control
 					this->currentControl->deselect();
@@ -137,6 +150,8 @@ void GraphicsTool::onLButtonDown(UINT nFlags, int x, int y)
 				if (colourControl->isFill()) {
 					this->fillColour->deselect();
 					this->fillColour = colourControl;
+					this->fillColour->handleClick();
+					// If there is a shape selected
 					if (this->selectedShape != NULL) {
 						// Alter the colour of the shape
 						this->selectedShape->setFillColour(colourControl->getColour());
@@ -145,13 +160,13 @@ void GraphicsTool::onLButtonDown(UINT nFlags, int x, int y)
 				else {
 					this->lineColour->deselect();
 					this->lineColour = colourControl;
+					this->lineColour->handleClick();
+					// If there is a shape selected
 					if (this->selectedShape != NULL) {
 						// Alter the colour of the shape
 						this->selectedShape->setLineColour(colourControl->getColour());
 					}
 				}
-
-				control->handleClick();
 			}
 		}
 	}
@@ -166,11 +181,14 @@ void GraphicsTool::onLButtonDown(UINT nFlags, int x, int y)
 							shape->setIsSelected(!this->selectedShape->isSelected());
 						}
 						else {
+							// Deselect the old selected shape
 							this->selectedShape->setIsSelected(false);
+							// Seleect the new shape
 							shape->setIsSelected(true);
 						}
 					}
 					else {
+						// Select the new shape (no previous selected)
 						shape->setIsSelected(true);
 					}
 				
@@ -205,7 +223,7 @@ void GraphicsTool::onLButtonDown(UINT nFlags, int x, int y)
 					shape->setIsSelected(false);
 				}
 
-				if (shape->isSelected() || this->currentControl->getName() == L"Move") {
+				if (shape->isSelected() || this->currentControl->getName() == L"Move" || this->currentControl->getName() == L"Delete") {
 					// This is the selected shape
 					this->selectedShape = shape;
 				}
@@ -233,9 +251,6 @@ void GraphicsTool::onLButtonDown(UINT nFlags, int x, int y)
 				this->fillColour->getColour()
 			);
 		}
-		else if (this->currentControl->getName() == L"Select") {
-			// Select the shape that has been clicked
-		}
 
 		this->onDraw();
 	}
@@ -250,20 +265,17 @@ void GraphicsTool::onMouseMove(UINT nFlags, int x, int y)
 		if (shapeControl != NULL) {
 			// Get the latest shape
 			Shape* latestShape = DrawingSingleton::GetInstance()->getLatestShape();
-			// Save the shape in storage
-			latestShape->setEndCoordinates(x, y);
+			if (latestShape != NULL) {
+				// Save the shape in storage
+				latestShape->setEndCoordinates(x, y);
+			}
 		}
 		else if (this->currentControl->getName() == L"Move" && this->selectedShape != NULL) {
-			int xDiff = 0;
-			
-
-			int yDiff = 0;
-			
+			// Move the shape with respect to the cursor
 			this->selectedShape->setStartCoordinates(x - this->shapeStartXDiff, y - this->shapeStartYDiff);
 			this->selectedShape->setEndCoordinates(x + this->shapeEndXDiff, y + this->shapeEndYDiff);
-			// Move that shape to a diff position
-			// this->selectedShape->moveBy(xDiff, yDiff);
 		}
+
 		this->onDraw();
 	}
 }
@@ -281,7 +293,9 @@ void GraphicsTool::onLButtonUp(UINT nFlags, int x, int y)
 		// If the control is a shape
 		if (shapeControl != NULL) {
 			Shape* latestShape = DrawingSingleton::GetInstance()->getLatestShape();
-			latestShape->setEndCoordinates(this->endX, this->endY);
+			if (latestShape != NULL) {
+				latestShape->setEndCoordinates(this->endX, this->endY);
+			}
 		}
 		else if (this->currentControl->getName() == L"Move" && this->selectedShape != NULL) {
 			// Move that shape to a diff position
@@ -303,6 +317,7 @@ void GraphicsTool::onLButtonUp(UINT nFlags, int x, int y)
 
 	this->onDraw();
 	
+	// Reset the movement variables
 	this->startX = NULL;
 	this->startY = NULL;
 	this->endX = NULL;

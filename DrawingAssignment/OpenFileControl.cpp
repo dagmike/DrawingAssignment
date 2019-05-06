@@ -54,6 +54,6 @@ void OpenFileControl::handleClick()
 		}
 	}
 	else {
-		std::cout << "Failed to open file";
+		throw L"Error opening file.";
 	}
 }

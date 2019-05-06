@@ -13,6 +13,7 @@ Control::~Control()
 {
 }
 
+// Draw the control
 void Control::draw(EasyGraphics* canvas) const
 {
 	canvas->setPenColour(this->selected ? EasyGraphics::clRed : EasyGraphics::clBlack, 2);

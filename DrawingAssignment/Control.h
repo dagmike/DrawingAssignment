@@ -9,8 +9,8 @@ public:
 	~Control();
 
 	void draw(EasyGraphics* canvas) const;
-	inline const wchar_t* getName() const;
-	inline bool isClicked(int clickX, int clickY) const;
+	const wchar_t* getName() const;
+	bool isClicked(int clickX, int clickY) const;
 	virtual void handleClick();
 	void deselect();
 
@@ -27,12 +27,14 @@ private:
 	bool selected;
 };
 
-bool Control::isClicked(int clickX, int clickY) const
+// Check if the control has been clicked
+inline bool Control::isClicked(int clickX, int clickY) const
 {
 	return (clickX >= x && clickX <= x + width)
 		&& (clickY >= y && clickY <= y + height);
 }
 
+// Get the name of the control
 inline const wchar_t* Control::getName() const
 {
 	return this->name;
