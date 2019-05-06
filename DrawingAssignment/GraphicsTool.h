@@ -43,4 +43,6 @@ private:
 
 	void drawShape(Shape* shape);
 	void drawControl(Control* control);
+
+	bool isColourControl(Control* control) const;
 };

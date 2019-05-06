@@ -102,43 +102,52 @@ void GraphicsTool::onLButtonDown(UINT nFlags, int x, int y)
 
 	// Figure out if the controls are touched or not
 	if (x <= this->controlsMargin) {
-		for (Control* control : controls) {
-			if (control->isClicked(x, y)) {
-				// See if it is a colour control
-				ColourControl* colourControl = dynamic_cast<ColourControl*>(control);
-				
-				if (colourControl == NULL && control != this->currentControl) {
-					// Not a colour control
-					control->handleClick();
-					if (control->getName() != L"OpenFile" && control->getName() != L"SaveFile") {
-						// Deselect old control
-						this->currentControl->deselect();
-						// Set current control
-						this->currentControl = control;
+
+		// Find the control that is clicked
+		std::vector<Control*>::iterator selectedControl = std::find_if(controls.begin(), controls.end(), [&x, &y](Control* control)
+			{
+				return control->isClicked(x, y);
+			}
+		);
+
+		// Make sure a control has been clicked
+		if (selectedControl != controls.end()) {
+			Control* control = (*selectedControl);
+
+			// See if it is a colour control
+			ColourControl* colourControl = dynamic_cast<ColourControl*>(control);
+
+			if (colourControl == NULL && control != this->currentControl) {
+				// Not a colour control
+				control->handleClick();
+				if (control->getName() != L"OpenFile" && control->getName() != L"SaveFile") {
+					// Deselect old control
+					this->currentControl->deselect();
+					// Set current control
+					this->currentControl = control;
+				}
+			}
+			else if (colourControl != NULL) {
+				int colour = colourControl->getColour();
+
+				if (colourControl->isFill()) {
+					this->fillColour->deselect();
+					this->fillColour = colourControl;
+					if (this->selectedShape != NULL) {
+						// Alter the colour of the shape
+						this->selectedShape->setFillColour(colourControl->getColour());
 					}
 				}
-				else if (colourControl != NULL) {
-					int colour = colourControl->getColour();
-
-					if (colourControl->isFill()) {
-						this->fillColour->deselect();
-						this->fillColour = colourControl;
-						if (this->selectedShape != NULL) {
-							// Alter the colour of the shape
-							this->selectedShape->setFillColour(colourControl->getColour());
-						}
+				else {
+					this->lineColour->deselect();
+					this->lineColour = colourControl;
+					if (this->selectedShape != NULL) {
+						// Alter the colour of the shape
+						this->selectedShape->setLineColour(colourControl->getColour());
 					}
-					else {
-						this->lineColour->deselect();
-						this->lineColour = colourControl;
-						if (this->selectedShape != NULL) {
-							// Alter the colour of the shape
-							this->selectedShape->setLineColour(colourControl->getColour());
-						}
-					}
-
-					control->handleClick();
 				}
+
+				control->handleClick();
 			}
 		}
 	}
