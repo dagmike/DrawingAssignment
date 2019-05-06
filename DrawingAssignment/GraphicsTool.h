@@ -8,6 +8,7 @@
 #include "Shape.h"
 #include <vector>
 #include <algorithm>
+#include <functional>
 #include "DrawingSingleton.h"
 
 class GraphicsTool
@@ -39,4 +40,7 @@ private:
 
 	int startX, startY;
 	int endX, endY;
+
+	void drawShape(Shape* shape);
+	void drawControl(Control* control);
 };

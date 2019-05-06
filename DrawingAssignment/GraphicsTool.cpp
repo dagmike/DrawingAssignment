@@ -67,20 +67,27 @@ void GraphicsTool::onCreate()
 	this->controlsMargin = 50;
 }
 
+void GraphicsTool::drawShape(Shape* shape)
+{
+	shape->draw(this);
+}
+
+void GraphicsTool::drawControl(Control* control)
+{
+	control->draw(this);
+}
+
 void GraphicsTool::onDraw()
 {
 	// Create a white screen
 	clrscr(clWhite);
-
+	
 	// Draw the controls
-	for (Control* control : controls) {
-		control->draw(this);
-	}
+	std::for_each(controls.begin(), controls.end(), std::bind1st(std::mem_fun(&GraphicsTool::drawControl), this));
 
-	// Draw the current drawing
-	for (Shape* shape : DrawingSingleton::GetInstance()->getShapes()) {
-		shape->draw(this);
-	}
+	// Draw the shapes
+	std::vector<Shape*> shapes = DrawingSingleton::GetInstance()->getShapes();
+	std::for_each(shapes.begin(), shapes.end(), std::bind1st(std::mem_fun(&GraphicsTool::drawShape), this));
 
 	EasyGraphics::onDraw();
 }
