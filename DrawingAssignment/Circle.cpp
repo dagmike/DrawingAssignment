@@ -29,6 +29,11 @@ void Circle::draw(EasyGraphics* canvas)
 	this->radius = floor(sqrt(pow(horizontal, 2) + pow(vertical, 2)));
 
 	canvas->drawCircle(startX, startY, radius, fillColour != NULL);
+
+	if (this->selected) {
+		canvas->setPenColour(EasyGraphics::clDarkGrey, 2);
+		canvas->drawCircle(startX, startY, radius + 5, false);
+	}
 }
 
 bool Circle::isClicked(int x, int y)

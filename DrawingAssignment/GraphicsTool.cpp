@@ -7,7 +7,7 @@ GraphicsTool::GraphicsTool(HINSTANCE hInstance)
 	this->setImmediateDrawMode(false);
 
 	// Create the window
-	create(hInstance, 800, 814, 40, true);
+	create(hInstance, 800, 864, 40, true);
 }
 
 
@@ -34,32 +34,33 @@ void GraphicsTool::onCreate()
 	controls.push_back(new ShapeControl(L"Rectangle", 0, 0, L"icons/rectangle.bmp"));
 	controls.push_back(new ShapeControl(L"Circle", 0, 50, L"icons/circle.bmp"));
 	controls.push_back(new ShapeControl(L"Line", 0, 100, L"icons/line.bmp"));
-	controls.push_back(new Control(L"Move", 0, 150, L"icons/move.bmp"));
-	controls.push_back(new Control(L"Delete", 0, 200, L"icons/delete.bmp"));
+	controls.push_back(new Control(L"Select", 0, 150, L"icons/select.bmp"));
+	controls.push_back(new Control(L"Move", 0, 200, L"icons/move.bmp"));
+	controls.push_back(new Control(L"Delete", 0, 250, L"icons/delete.bmp"));
 
 	// Add line colour controls
-	controls.push_back(new ColourControl(L"LineRed", 0, 275, L"icons/colours/redLine.bmp", EasyGraphics::clRed, false));
-	controls.push_back(new ColourControl(L"LineGreen", 0, 325, L"icons/colours/greenLine.bmp", EasyGraphics::clGreen, false));
-	controls.push_back(new ColourControl(L"LineBlue", 0, 375, L"icons/colours/blueLine.bmp", EasyGraphics::clBlue, false));
+	controls.push_back(new ColourControl(L"LineRed", 0, 325, L"icons/colours/redLine.bmp", EasyGraphics::clRed, false));
+	controls.push_back(new ColourControl(L"LineGreen", 0, 375, L"icons/colours/greenLine.bmp", EasyGraphics::clGreen, false));
+	controls.push_back(new ColourControl(L"LineBlue", 0, 425, L"icons/colours/blueLine.bmp", EasyGraphics::clBlue, false));
 
 	// Add fill colour controls
-	controls.push_back(new ColourControl(L"FillRed", 0, 450, L"icons/colours/redFill.bmp", EasyGraphics::clRed, true));
-	controls.push_back(new ColourControl(L"FillGreen", 0, 500, L"icons/colours/greenFill.bmp", EasyGraphics::clGreen, true));
-	controls.push_back(new ColourControl(L"FillBlue", 0, 550, L"icons/colours/blueFill.bmp", EasyGraphics::clBlue, true));
-	controls.push_back(new ColourControl(L"FillNone", 0, 600, L"icons/colours/noFill.bmp", NULL, true));
+	controls.push_back(new ColourControl(L"FillRed", 0, 500, L"icons/colours/redFill.bmp", EasyGraphics::clRed, true));
+	controls.push_back(new ColourControl(L"FillGreen", 0, 550, L"icons/colours/greenFill.bmp", EasyGraphics::clGreen, true));
+	controls.push_back(new ColourControl(L"FillBlue", 0, 600, L"icons/colours/blueFill.bmp", EasyGraphics::clBlue, true));
+	controls.push_back(new ColourControl(L"FillNone", 0, 650, L"icons/colours/noFill.bmp", NULL, true));
 
 	// Add file controls
-	controls.push_back(new OpenFileControl(L"OpenFile", 0, 675, L"icons/openFile.bmp"));
-	controls.push_back(new SaveFileControl(L"SaveFile", 0, 725, L"icons/saveFile.bmp"));
+	controls.push_back(new OpenFileControl(L"OpenFile", 0, 725, L"icons/openFile.bmp"));
+	controls.push_back(new SaveFileControl(L"SaveFile", 0, 775, L"icons/saveFile.bmp"));
 
 	// Set default control to rectangle
 	this->currentControl = controls.front();
 	this->currentControl->handleClick();
 
 	// Set default colours
-	this->lineColour = dynamic_cast<ColourControl*>(controls[5]);
+	this->lineColour = dynamic_cast<ColourControl*>(controls[6]);
 	this->lineColour->handleClick();
-	this->fillColour = dynamic_cast<ColourControl*>(controls[8]);
+	this->fillColour = dynamic_cast<ColourControl*>(controls[9]);
 	this->fillColour->handleClick();
 
 
@@ -111,15 +112,22 @@ void GraphicsTool::onLButtonDown(UINT nFlags, int x, int y)
 				}
 				else if (colourControl != NULL) {
 					int colour = colourControl->getColour();
-					
 
 					if (colourControl->isFill()) {
 						this->fillColour->deselect();
 						this->fillColour = colourControl;
+						if (this->selectedShape != NULL) {
+							// Alter the colour of the shape
+							this->selectedShape->setFillColour(colourControl->getColour());
+						}
 					}
 					else {
 						this->lineColour->deselect();
 						this->lineColour = colourControl;
+						if (this->selectedShape != NULL) {
+							// Alter the colour of the shape
+							this->selectedShape->setLineColour(colourControl->getColour());
+						}
 					}
 
 					control->handleClick();
@@ -131,9 +139,59 @@ void GraphicsTool::onLButtonDown(UINT nFlags, int x, int y)
 		// Check if any of the shapes have been clicked
 		for (Shape* shape : DrawingSingleton::GetInstance()->getShapes()) {
 			if (shape->isClicked(x, y)) {
-				// This is the selected shape
-				this->selectedShape = shape;
+				if (this->currentControl->getName() == L"Select") {
+					if (this->selectedShape != NULL) {
+						if (shape == this->selectedShape) {
+							// Select the new shape
+							shape->setIsSelected(!this->selectedShape->isSelected());
+						}
+						else {
+							shape->setIsSelected(true);
+						}
+					}
+					else {
+						shape->setIsSelected(true);
+					}
+				
+					// Set the current colour controls to that of the selected shapes colours
+					for (Control* control : controls) {
+						ColourControl* colourControl = dynamic_cast<ColourControl*>(control);
+						if (colourControl != NULL) {
+							if (colourControl->isFill()) {
+								if (colourControl->getColour() == shape->getFillColour() && this->fillColour != colourControl) {
+									this->fillColour->deselect();
+									this->fillColour = colourControl;
+									// Select the control
+									control->handleClick();
+								}
+								else if (this->fillColour != colourControl) {
+									control->deselect();
+								}
+							}
+							else if (colourControl->getColour() == shape->getLineColour() && this->lineColour != colourControl) {
+								this->lineColour->deselect();
+								this->lineColour = colourControl;
+								// Select the control
+								control->handleClick();
+							}
+							else if (this->lineColour != colourControl) {
+								control->deselect();
+							}
+						}
+					}
+				}
 
+				if (shape->isSelected()) {
+					// This is the selected shape
+					this->selectedShape = shape;
+				}
+				else {
+					this->selectedShape = NULL;
+				}
+				
+
+				// Get position of cursor in respect to the points of the shape
+				// for smooth movement when dragging
 				this->shapeStartXDiff = x - shape->getStartX();
 				this->shapeStartYDiff = y - shape->getStartY();
 				this->shapeEndXDiff = shape->getEndX() - x;
@@ -153,6 +211,9 @@ void GraphicsTool::onLButtonDown(UINT nFlags, int x, int y)
 				this->lineColour->getColour(),
 				this->fillColour->getColour()
 			);
+		}
+		else if (this->currentControl->getName() == L"Select") {
+			// Select the shape that has been clicked
 		}
 
 		this->onDraw();

@@ -13,6 +13,12 @@ void Line::draw(EasyGraphics* canvas)
 {
 	canvas->setPenColour(lineColour, 1);
 	canvas->drawLine(startX, startY, endX, endY);
+
+	if (this->selected) {
+		canvas->setPenColour(EasyGraphics::clDarkGrey, 2);
+		canvas->drawLine(startX + 5, startY, endX + 5, endY);
+		canvas->drawLine(startX - 5, startY, endX - 5, endY);
+	}
 }
 
 bool Line::isClicked(int x, int y)
